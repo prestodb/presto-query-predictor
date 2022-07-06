@@ -1,4 +1,4 @@
-# presto-query-predictor
+# Getting Started
 
 **presto-query-predictor** is a Python module introducing machine learning
 techniques to the Presto ecosystem. It contains a machine learning pipeline for
@@ -20,8 +20,9 @@ An alternative way is to install the package from PyPi,
 pip3 install presto-query-predictor
 ```
 
-We recommend installing the package in a Python virtual environment instead
-of installing it globally.
+!!! note
+    We recommend installing the package in a Python virtual environment instead
+    of installing it globally.
 
 ## Examples
 
@@ -45,8 +46,9 @@ python3 transform.py
 python3 train.py
 ```
 
-The *presto-query-predictor* package can only be executed in a Python 3
-environment. It does not support Python 2.
+!!! warning
+    The *presto-query-predictor* package can only be executed in a Python 3
+    environment. It does not support Python 2.
 
 Afterward, the trained models should be generated in the `models` folder, including
 
@@ -75,4 +77,4 @@ at [http://0.0.0.0:8000/](http://0.0.0.0:8000/).
 There is a web UI for the application where you can fill in the form with a
 query for resources prediction.
 
-<img src="https://github.com/twitter-forks/presto/blob/query-predictor/presto-query-predictor/docs/img/web-app.png?raw=true" width="500">
+<img src="/img/web-app.png" width="500">
