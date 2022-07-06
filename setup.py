@@ -14,7 +14,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     version=version,
-    url="https://github.com/twitter-forks/presto/tree/query-predictor/presto-query-predictor",
+    url="https://github.com/prestodb/presto-query-predictor",
     packages=find_packages(exclude=["tests", "tests.*"]),
     include_package_data=True,
     zip_safe=False,
