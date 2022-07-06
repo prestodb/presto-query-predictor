@@ -1,0 +1,10 @@
+Flask
+flask-cors
+joblib
+numpy
+pandas
+pytest
+pyyaml
+scikit-learn
+xgboost
+waitress
