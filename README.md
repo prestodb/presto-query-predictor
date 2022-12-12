@@ -76,3 +76,19 @@ There is a web UI for the application where you can fill in the form with a
 query for resources prediction.
 
 <img src="https://github.com/twitter-forks/presto/blob/query-predictor/presto-query-predictor/docs/img/web-app.png?raw=true" width="500">
+
+### Citation
+
+Please cite the following article ([arxiv_link](https://arxiv.org/pdf/2204.05529.pdf)) 
+in your publications if the query predictor helps your work:
+
+```text
+@inproceedings{tang2021forecasting,
+  title={Forecasting {SQL} query cost at {Twitter}},
+  author={Tang, Chunxu and Wang, Beinan and Luo, Zhenxiao and Wu, Huijun and Dasan, Shajan and Fu, Maosong and Li, Yao and Ghosh, Mainak and Kabra, Ruchin and Navadiya, Nikhil Kantibhai and others},
+  booktitle={2021 IEEE International Conference on Cloud Engineering (IC2E)},
+  pages={154--160},
+  year={2021},
+  organization={IEEE}
+}
+```
