@@ -13,9 +13,11 @@
 This module contains the wrapper for an XGBoost classifier.
 """
 from pathlib import Path
+from typing import Callable
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Tuple
 from typing import Union
 
 import numpy as np
@@ -23,6 +25,7 @@ import xgboost as xgb
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import GridSearchCV
 
 from ..exceptions import ClassifierException
 from ..logging_utils import get_module_logger
@@ -71,10 +74,66 @@ class XGBoostClassifier(Classifier):
         train_data: np.ndarray,
         train_labels: np.ndarray,
         param_grid: Union[Dict[str, List], List[Dict[str, List]]],
-    ):
-        # TODO
-        # Add the tuning mechanism for the XGBoost classifier.
-        pass
+        scoring: Union[
+            str, Callable, List[str], Tuple[str], Dict[str, Callable]
+        ] = "accuracy",
+        n_jobs: int = -1,
+        cv: int = 3,
+    ) -> Dict:
+        """
+        Tunes the parameters of the XGBoost classification algorithm with an
+        exhaustive search over parameter values provided. After the method, the
+        ``Classifier.classifier`` variable is set to hold the best estimator.
+
+        :param train_data: Training input samples.
+        :param train_labels: Training labels.
+        :param param_grid: Dictionary (or a list of such dictionaries) with parameters
+        names as keys and lists of parameter settings for model tuning.
+        :param scoring: A string of metric or a callable to evaluate the predictions
+        on the validation dataset. The mean accuracy is used by default.
+        :param n_jobs: Number of jobs to run in parallel. ``-1`` is set by default,
+        meaning using all processors.
+        :param cv: The number of folds used for the cross validation. ``3`` is set
+        by default (instead of ``5`` in the ``sklearn.model_selection.GridSearchCV``).
+        :return: A dictionary of the best score and corresponding parameters.
+        """
+        tune_search = GridSearchCV(
+            self.classifier,
+            param_grid,
+            cv=cv,
+            n_jobs=n_jobs,
+            scoring=scoring,
+            return_train_score=True,
+        )
+        tune_search.fit(train_data, train_labels)
+
+        # The classifier holds the best estimator founded. So the classifier can
+        # be used later for other purposes such as testing on another dataset.
+        self.classifier = tune_search.best_estimator_
+
+        # Logging the information of tuning results of all estimators.
+        cv_results = tune_search.cv_results_
+        for i, param in enumerate(cv_results["params"]):
+            param_str = ", ".join(
+                f"{key}={val}" for (key, val) in param.items()
+            )
+            _logger.info(
+                "(%s): {mean_train_score: %s, mean_test_score: %s}",
+                param_str,
+                cv_results["mean_train_score"][i],
+                cv_results["mean_test_score"][i],
+            )
+
+        _logger.info(
+            "best_params: %s, best_score: %s",
+            tune_search.best_params_,
+            tune_search.best_score_,
+        )
+
+        return {
+            "best_params": tune_search.best_params_,
+            "best_score": tune_search.best_score_,
+        }
 
     def predict(self, test_data: np.ndarray) -> np.ndarray:
         """

@@ -15,6 +15,7 @@ This file contains examples to tune machine learning models.
 import pprint
 from query_predictor.datasets import load_tpch
 from query_predictor.predictor.classifier import RandomForestClassifier
+from query_predictor.predictor.classifier import XGBoostClassifier
 from query_predictor.predictor.data_transformer import DataTransformer
 from query_predictor.predictor.data_vectorizer import DataTfidfVectorizer
 
@@ -44,11 +45,19 @@ if __name__ == "__main__":
     vectorizer = DataTfidfVectorizer(vec_params)
     x_train = vectorizer.vectorize(x_train)
 
-    param_grid = {"n_estimators": [50, 60], "max_depth": [5, 10]}
-    classifier = RandomForestClassifier()
-    results = classifier.tune(
-        train_data=x_train, train_labels=y_train, param_grid=param_grid
+    rf_param_grid = {"n_estimators": [50, 60], "max_depth": [5, 10]}
+    rf_classifier = RandomForestClassifier()
+    rf_results = rf_classifier.tune(
+        train_data=x_train, train_labels=y_train, param_grid=rf_param_grid
     )
 
     pp = pprint.PrettyPrinter()
-    pp.pprint(results)
+    pp.pprint(rf_results)
+
+    xgboost_param_grid = {"learning_rate": [0.1, 1], "max_depth": [5, 10]}
+    xgboost_classifier = XGBoostClassifier()
+    xgboost_results = xgboost_classifier.tune(
+        train_data=x_train, train_labels=y_train, param_grid=xgboost_param_grid
+    )
+
+    pp.pprint(xgboost_results)
